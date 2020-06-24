@@ -9,6 +9,7 @@ import pickle
 # dynamic path
 # better pickle name
 # more organization
+# Lots
 
 """ File navigation logistics """
 
@@ -16,7 +17,7 @@ import pickle
 run_dir = os.getcwd() #Where we currently are, should be strain_dir
 print(os.getcwd())
 #rel_path= "bench_hflu_dir/jelly" #FIX
-#abs_file_path = os.path.join(script_dir, rel_path)
+#ab_file_path = os.path.join(script_dir, rel_path)
 jelly_path = os.getcwd()
 jelly_files = [f for f in os.listdir(jelly_path) if f.endswith('.jdb')]
 kdict = {}
@@ -51,12 +52,14 @@ for jf in jelly_files:
 
 rmlist =[]
 keeplist=[]
-for key, value in kdict.items():
-    if len(value) >= len(jelly_files):
-        rmlist.append(key)
-    else:
-        keeplist.append(key)
-
+if len(jelly_files) > 1:
+    for key, value in kdict.items():
+        if len(value) >= len(jelly_files):
+            rmlist.append(key)
+        else:
+            keeplist.append(key)
+else:
+    print("only 1 jdb file... no filtering needed")
 
 for kmer in rmlist:
     del kdict[kmer]
