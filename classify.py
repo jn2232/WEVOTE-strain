@@ -49,8 +49,10 @@ def getArgs():
 # If species taxID is found in line, get the name of the read from the file, which shoud be the first element
 # Search through old read file for the read name, if found copy that line plus the next line (which should contain the actual nt sequence)
 # Write both lines to the new fasta file
+# {}_R#_extracted_reads.txt serves as an index containing the read name and taxID information for all extracted reads
 def getReads(params):
     pattern = '\t{}\n'.format(params.species_taxID)
+    R1_extracted_reads_index = open('{}_R1_extracted_reads.txt'.format(params.species_taxID), 'a+')
     newFasta_R1 = open('{}_R1.fasta'.format(params.species_taxID), 'a+')
     oldFastaR1 = open(params.input_fasta, 'r')
     search_reads = oldFastaR1.readlines()
@@ -69,6 +71,7 @@ def getReads(params):
                     # print("Input_fasta: ", readName)
                     nextLine = search_reads[j + 1]
                     newFasta_R1.write(nextLine + '\n')
+                    R1_extracted_reads_index.write(line)
                     # print("Input_fasta: ", nextLine)
                     j += 2
                     break
@@ -79,6 +82,7 @@ def getReads(params):
 def getPairedReads(params):
     if params.paired:
         pattern = '\t{}\n'.format(params.species_taxID)
+        R2_extracted_reads_index = open('{}_R2_extracted_reads.txt'.format(params.species_taxID), 'a+')
         newFasta_R2 = open('{}_R2.fasta'.format(params.species_taxID), 'a+')
         oldFastaR2 = open(params.input_fasta2, 'r')
         search_reads = oldFastaR2.readlines()
@@ -97,6 +101,7 @@ def getPairedReads(params):
                         # print("Input_fasta: ", readName)
                         nextLine = search_reads[j + 1]
                         newFasta_R2.write(nextLine + '\n')
+                        R2_extracted_reads_index.write(line)
                         # print("Input_fasta: ", nextLine)
                         j += 2
                         break
@@ -647,7 +652,7 @@ def main():
     ############## I didnt change the name of the output file for strain classified reads, but I commented out what I wrote it as to be consistent with what I wrote for getReads, but I'm guessing those need to be edited to be consistent with the rest of the code lol!
     ########################################
     fasta_name = os.path.basename(params.input_fasta) #get filename from filepath
-    # fasta_name = 'species{}_reads.fasta'.format(params.species_taxID)
+    ############## fasta_name = 'species{}_reads.fasta'.format(params.species_taxID)
     outfile_base = os.path.splitext(fasta_name)[0] #remove extension
     wvsPrintRawReads(params,outfile_base)
 
